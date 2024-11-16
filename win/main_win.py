@@ -1,4 +1,5 @@
 import sqlite3
+from consultas import get_vendedores, get_num_vendas
 
 # 1. Conectar ou criar o banco de dados
 conexao = sqlite3.connect("vendas_colaboradores.db")  # Cria ou conecta ao arquivo 'meu_banco.db'
@@ -59,14 +60,17 @@ try:
 except sqlite3.IntegrityError as e:
     print("Erro ao inserir dados:", e)
 
-
      
 # 4. Consultar dados
-cursor.execute("SELECT * FROM vendedores")
-usuarios = cursor.fetchall()  # Pega todos os registros
-print("\nUsuários cadastrados:")
-for usuario in usuarios:
-    print(usuario)
+vendedores = get_vendedores('vendas_colaboradores.db')
+print("\nVendedores cadastrados:")
+for vendedor in vendedores:
+    print(vendedor)
+
+numero_vendas = get_num_vendas('vendas_colaboradores.db')
+print("\nNúmero de vendas por vendedor:")
+for vendedor, vendas in numero_vendas:
+    print(f"{vendedor}: {vendas} vendas")
 
 # 5. Fechar a conexão
 conexao.commit()  # Salva as alterações no banco de dados
