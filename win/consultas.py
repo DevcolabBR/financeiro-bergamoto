@@ -13,18 +13,21 @@ def get_vendedores(db_path):  # Função para consultar os vendedores
     
     # Fechar a conexão
     conexao.close()
-    
     return vendedores
 
-def get_num_vendas(db_path):  # Função para consultar o número de vendas por vendedor
+def get_num_vendas(db_path):  # Retorna o número de vendas por vendedor
     conexao = sqlite3.connect(db_path)
     cursor = conexao.cursor()
-    cursor.execute("""
-        SELECT v.nome, COUNT(vd.id_produto) as numero_vendas
-        FROM vendedores v
-        LEFT JOIN vendas vd ON v.rowid = vd.id_vendedor
-        GROUP BY v.rowid
-    """)
-    numero_vendas = cursor.fetchall()
+
+    # Consulta para contar as vendas por vendedor
+    query = """
+    SELECT vendedores.nome_vendedor, COUNT(vendas.id_produto) AS total_vendas
+    FROM vendedores
+    LEFT JOIN vendas ON vendedores.id_vendedor = vendas.id_vendedor
+    GROUP BY vendedores.id_vendedor
+    """
+    cursor.execute(query)
+    resultados = cursor.fetchall()
+
     conexao.close()
-    return numero_vendas
+    return resultados
