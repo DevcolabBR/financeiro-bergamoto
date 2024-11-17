@@ -1,11 +1,11 @@
 #%%
 import sqlite3
-from consultas import get_vendedores, get_num_vendas
+from consultas import get_vendedores, adicionar_coluna_numero_vendas, atualizar_numero_vendas
 #%%
 # 1. Conectar ou criar o banco de dados
 conexao = sqlite3.connect("vendas_colaboradores.db")  # Cria ou conecta ao arquivo 'meu_banco.db'
 cursor = conexao.cursor()  # Cria um cursor para executar comandos SQL
-
+#%%
 # 2. Criar uma tabela
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS vendedores (
@@ -85,22 +85,16 @@ try:
 except sqlite3.IntegrityError as e:
     print("Erro ao inserir dados:", e)
 
+conexao.commit()  # Salva as alterações no banco de dados
+
 #%% 
 # 4. Consultar dados
-vendedores = get_vendedores('vendas_colaboradores.db')
-print("\nVendedores cadastrados:")
-for vendedor in vendedores:
-    print(vendedor)
-
-numero_vendas = get_num_vendas("vendas_colaboradores.db")
-print("\nNúmero de vendas por vendedor:")
-for vendedor, vendas in numero_vendas:
-    print(f"{vendedor}: {vendas} vendas")
-
+adicionar_coluna_numero_vendas("vendas_colaboradores.db")
+atualizar_numero_vendas("vendas_colaboradores.db")
+#%%
 # 5. Fechar a conexão
 conexao.commit()  # Salva as alterações no banco de dados
 conexao.close()
 print("\nConexão fechada.")
-
 
 # %%
