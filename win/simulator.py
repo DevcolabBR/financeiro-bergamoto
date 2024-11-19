@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS horarios (
 ''')
 
 # Função para gerar um nome aleatório
+
 def generate_name():
     first_names = ["Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gabriel", "Helena", "Igor", "Juliana",
                    "Larissa", "Marcos", "Nina", "Otávio", "Paula", "Rafael", "Sofia", "Thiago", "Vanessa", "Yuri"]

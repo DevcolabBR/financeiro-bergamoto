@@ -1,6 +1,6 @@
 import sqlite3
 
-db_path = "vendas_colaboradores.db" # Caminho do banco de dados
+db_path = "data/bergamoto.db" # Caminho do banco de dados
 
 def get_vendedores(db_path):  # Função para consultar os vendedores
     # Conectar ao banco de dados
