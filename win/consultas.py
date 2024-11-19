@@ -13,8 +13,10 @@ def get_vendedores(db_path):  # Função para consultar os vendedores
     
     # Fechar a conexão
     conexao.close()
+    
     return vendedores
 
+<<<<<<< HEAD
 
 def adicionar_coluna_numero_vendas(db_path):
     conexao = sqlite3.connect(db_path)
@@ -51,3 +53,17 @@ def atualizar_numero_vendas(db_path):
     conexao.commit()
     conexao.close()
 
+=======
+def get_num_vendas(db_path):  # Função para consultar o número de vendas por vendedor
+    conexao = sqlite3.connect(db_path)
+    cursor = conexao.cursor()
+    cursor.execute("""
+        SELECT v.nome, COUNT(vd.id_produto) as numero_vendas
+        FROM vendedores v
+        LEFT JOIN vendas vd ON v.rowid = vd.id_vendedor
+        GROUP BY v.rowid
+    """)
+    numero_vendas = cursor.fetchall()
+    conexao.close()
+    return numero_vendas
+>>>>>>> parent of 52ec942 (Refactor consultas and main_win modules to improve database queries and insertions)
