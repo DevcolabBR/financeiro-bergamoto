@@ -8,22 +8,20 @@ def get_vendedores(db_path):  # Função para consultar os vendedores
     cursor = conexao.cursor()
     
     # Realizar a consulta
-    cursor.execute("SELECT * FROM vendedores")
-    vendedores = cursor.fetchall()
+    cursor.execute("SELECT * FROM usuarios")
+    usuarios = cursor.fetchall()
     
     # Fechar a conexão
     conexao.close()
     
-    return vendedores
-
-<<<<<<< HEAD
+    return usuarios
 
 def adicionar_coluna_numero_vendas(db_path):
     conexao = sqlite3.connect(db_path)
     cursor = conexao.cursor()
     
     # Adicionar uma nova coluna chamada `numero_vendas` na tabela vendedores
-    cursor.execute("ALTER TABLE vendedores ADD COLUMN numero_vendas INTEGER DEFAULT 0")
+    cursor.execute("ALTER TABLE usuarios ADD COLUMN numero_vendas INTEGER DEFAULT 0")
     
     conexao.commit()
     conexao.close()
@@ -34,10 +32,10 @@ def atualizar_numero_vendas(db_path):
     
     # Consulta para contar as vendas por vendedor
     query = """
-    SELECT vendedores.id_vendedor, COUNT(vendas.id_produto) AS total_vendas
-    FROM vendedores
-    LEFT JOIN vendas ON vendedores.id_vendedor = vendas.id_vendedor
-    GROUP BY vendedores.id_vendedor
+    SELECT usuarios.id, COUNT(vendas.id) AS total_vendas
+    FROM usuarios
+    LEFT JOIN vendas ON usuarios.name = vendas.name
+    GROUP BY usuarios.id
     """
     
     cursor.execute(query)
@@ -46,24 +44,22 @@ def atualizar_numero_vendas(db_path):
     # Atualizar a tabela vendedores com os resultados
     for id_vendedor, total_vendas in resultados:
         cursor.execute(
-            "UPDATE vendedores SET numero_vendas = ? WHERE id_vendedor = ?",
+            "UPDATE usuarios SET numero_vendas = ? WHERE id = ?",
             (total_vendas, id_vendedor)
         )
     
     conexao.commit()
     conexao.close()
 
-=======
 def get_num_vendas(db_path):  # Função para consultar o número de vendas por vendedor
     conexao = sqlite3.connect(db_path)
     cursor = conexao.cursor()
     cursor.execute("""
-        SELECT v.nome, COUNT(vd.id_produto) as numero_vendas
-        FROM vendedores v
-        LEFT JOIN vendas vd ON v.rowid = vd.id_vendedor
+        SELECT v.nome, COUNT(vd.id) as numero_vendas
+        FROM usuarios v
+        LEFT JOIN vendas vd ON v.rowid = vd.name
         GROUP BY v.rowid
     """)
     numero_vendas = cursor.fetchall()
     conexao.close()
     return numero_vendas
->>>>>>> parent of 52ec942 (Refactor consultas and main_win modules to improve database queries and insertions)
