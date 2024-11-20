@@ -25,6 +25,7 @@ def create_vendedores(db_path):
         CREATE TABLE IF NOT EXISTS vendedores AS
         SELECT * FROM usuarios WHERE setor = 'vendas'
                    ''')
+    
     conexao.commit()
     conexao.close()
 

@@ -3,7 +3,7 @@ import os
 import sqlite3
 from consultas import get_vendedores, adicionar_coluna_numero_vendas, atualizar_numero_vendas,set_metas,create_vendedores,adicionar_coluna_total_vendas,atualizar_total_vendas
 
-conexao = sqlite3.connect("bergamoto.db")
+conexao = sqlite3.connect("bregamoto.db")
 cursor = conexao.cursor() 
 #%% 
 # 4. Consultar vendedores
@@ -11,7 +11,7 @@ get_vendedores("bergamoto.db")
 
 #%%
 # 5. Definir metas-(APENAS SETOR DE VENDAS)
-set_metas("bergamoto.db",400,"vendas")
+set_metas("bergamoto.db",10000,"vendas")
 #%%
 # 6. CONSULTAR QUANTIDADE DE VENDAS POR VENDEDOR
 adicionar_coluna_numero_vendas("bergamoto.db")
