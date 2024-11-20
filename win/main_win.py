@@ -1,7 +1,7 @@
 #%%
 import os
 import sqlite3
-from consultas import get_vendedores, adicionar_coluna_numero_vendas, atualizar_numero_vendas,set_metas,create_vendedores,adicionar_coluna_total_vendas,atualizar_total_vendas
+from consultas import get_vendedores, adicionar_coluna_numero_vendas, atualizar_numero_vendas,set_metas,create_vendedores,adicionar_coluna_total_vendas,atualizar_total_vendas,get_vendas_setor,get_mais_vendidos
 
 conexao = sqlite3.connect("bregamoto.db")
 cursor = conexao.cursor() 
@@ -24,9 +24,14 @@ create_vendedores("bergamoto.db")
 # CONSULTA $$$ VENDIDOS)
 adicionar_coluna_total_vendas("bergamoto.db")
 atualizar_total_vendas("bergamoto.db")
+
+# %%
+get_vendas_setor("bergamoto.db","vendas")
+
+#%%
+get_mais_vendidos("bergamoto.db")
+#%%
 #Fechar a conexão
 conexao.commit()  # Salva as alterações no banco de dados
 conexao.close()
 print("\nConexão fechada.")
-
-# %%

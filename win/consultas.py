@@ -64,7 +64,6 @@ def atualizar_numero_vendas(db_path):
     conexao.commit()
     conexao.close()
 
-################
 def adicionar_coluna_total_vendas(db_path):
     conexao = sqlite3.connect(db_path)
     cursor = conexao.cursor()
@@ -97,5 +96,43 @@ def atualizar_total_vendas(db_path):
             (total_vendas, id_vendedor)
         )
     
-    conexao.commit()
+
+def get_vendas_setor(db_path,setor):
+        conexao = sqlite3.connect(db_path)
+        cursor = conexao.cursor()
+        query = """SELECT usuarios.setor,SUM(vendas.valor_unitario)
+        FROM usuarios 
+        LEFT JOIN vendas ON usuarios.name = vendas.name
+        WHERE usuarios.setor = ?
+        GROUP BY usuarios.setor
+        """
+        cursor.execute(query,(setor,))
+        resultados = cursor.fetchall()
+
+        #exibir resultados
+        for setor, total_vendas in resultados :
+            print(f"setor{setor},||Total de Vendas: {total_vendas}")
+        conexao.close()
+        
+def get_mais_vendidos(db_path):
+    conexao = sqlite3.connect(db_path)
+    cursor = conexao.cursor()
+
+    query = """
+    SELECT produto, SUM(valor_unitario) AS total_vendas
+    FROM vendas
+    GROUP BY produto
+    ORDER BY total_vendas DESC
+    LIMIT 1
+    """
+
+    cursor.execute(query)
+    resultado = cursor.fetchone()
+
+    if resultado:
+        produto, total_vendas = resultado
+        print(f"Produto mais vendido: {produto}, Total Vendido: {total_vendas}")
+    else:
+        print("Nenhum produto encontrado.")
+
     conexao.close()
