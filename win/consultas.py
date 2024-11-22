@@ -116,5 +116,20 @@ def get_mais_vendidos(db_path):
         print(f"Produto mais vendido: {produto}, Total Vendido: {total_vendas}")
     else:
         print("Nenhum produto encontrado.")
-
     conexao.close()
+
+def set_meta_alcancada(db_path):
+    conexao = sqlite3.connect(db_path)
+    cursor = conexao.cursor()
+
+    query = """
+    SELECT colaborador.name, metas, numero_vendas
+    FROM colaboradores
+    WHERE numero_vendas >= metas
+    """
+    cursor.execute(query)
+    resultado = cursor.execute(query).fetchone()
+
+    if resultado:
+        name, meta, vendas = resultado
+        print(f"Colaborador {name} atingiu a meta de {meta} com {vendas} vendas.")
