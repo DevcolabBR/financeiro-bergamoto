@@ -26,8 +26,10 @@ get_vendas_setor("bergamoto.db","vendas") ## OK
 #%%
 get_mais_vendidos("bergamoto.db") ## OK
 #%%
-set_meta_alcancada("bergamoto.db","vendas") ## OK
+set_meta_alcancada("bergamoto.db") ## OK
 #Fechar a conexão
 conexao.commit()  # Salva as alterações no banco de dados
 conexao.close()
 print("\nConexão fechada.")
+
+# %%

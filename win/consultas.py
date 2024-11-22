@@ -123,13 +123,17 @@ def set_meta_alcancada(db_path):
     cursor = conexao.cursor()
 
     query = """
-    SELECT colaborador.name, metas, numero_vendas
+    SELECT colaboradores.name, metas, numero_vendas
     FROM colaboradores
     WHERE numero_vendas >= metas
     """
     cursor.execute(query)
-    resultado = cursor.execute(query).fetchone()
+    resultados = cursor.fetchall()
 
-    if resultado:
-        name, meta, vendas = resultado
-        print(f"Colaborador {name} atingiu a meta de {meta} com {vendas} vendas.")
+    if resultados:
+        for name, meta, vendas in resultados:
+            print(f"Colaborador {name} atingiu a meta de {meta} com {vendas} vendas.")
+    else:
+        print("Nenhum colaborador atingiu a meta.")
+
+    conexao.close()
