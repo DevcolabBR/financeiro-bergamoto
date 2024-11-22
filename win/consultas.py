@@ -5,7 +5,7 @@ db_path = "bergamoto.db" # Caminho do banco de dados
 def get_vendedores(db_path):
     conexao = sqlite3.connect(db_path)
     cursor = conexao.cursor()
-    cursor.execute("SELECT * FROM usuarios WHERE setor = 'vendas'")
+    cursor.execute("SELECT * FROM colaboradores WHERE setor = 'vendas'")
     vendedores = cursor.fetchall()
     for vendedor in vendedores:
         print(vendedor)
@@ -14,7 +14,7 @@ def get_vendedores(db_path):
 def set_metas(db_path,nova_meta,setor):
     conexao = sqlite3.connect(db_path)
     cursor = conexao.cursor()
-    cursor.execute("UPDATE usuarios SET metas = ? WHERE setor = ?", (nova_meta,setor))
+    cursor.execute("UPDATE colaboradores SET metas = ? WHERE setor = ?", (nova_meta,setor))
     conexao.commit()
     conexao.close()
 
@@ -23,7 +23,7 @@ def create_vendedores(db_path):
     cursor = conexao.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS vendedores AS
-        SELECT * FROM usuarios WHERE setor = 'vendas'
+        SELECT * FROM colaboradores WHERE setor = 'vendas'
                    ''')
     
     conexao.commit()
@@ -34,7 +34,7 @@ def adicionar_coluna_numero_vendas(db_path):
     cursor = conexao.cursor()
     
     # Adicionar uma nova coluna chamada `numero_vendas` na tabela vendedores
-    cursor.execute("ALTER TABLE usuarios ADD COLUMN numero_vendas INTEGER DEFAULT 0")
+    cursor.execute("ALTER TABLE colaboradores ADD COLUMN numero_vendas INTEGER DEFAULT 0")
     
     conexao.commit()
     conexao.close()
@@ -45,73 +45,55 @@ def atualizar_numero_vendas(db_path):
     
     # Consulta para contar as vendas por vendedor
     query = """
-    SELECT usuarios.id, COUNT(vendas.id) AS total_vendas
-    FROM usuarios
-    LEFT JOIN vendas ON usuarios.name = vendas.name
-    GROUP BY usuarios.id
+    SELECT colaborador_id,
+       SUM(pedidos.total) AS total_vendas
+    FROM colaboradores
+    JOIN pedidos ON colaboradores.id = pedidos.colaborador_id
+    GROUP BY pedidos.colaborador_id
+    ORDER BY total_vendas DESC;
     """
-    
     cursor.execute(query)
     resultados = cursor.fetchall()
     
     # Atualizar a tabela vendedores com os resultados
     for id_vendedor, total_vendas in resultados:
         cursor.execute(
-            "UPDATE usuarios SET numero_vendas = ? WHERE id = ?",
+            "UPDATE colaboradores SET numero_vendas = ? WHERE id = ?",
             (total_vendas, id_vendedor)
         )
     
     conexao.commit()
-    conexao.close()
-
-def adicionar_coluna_total_vendas(db_path):
-    conexao = sqlite3.connect(db_path)
-    cursor = conexao.cursor()
-    
-    # Adicionar uma nova coluna chamada `numero_vendas` na tabela vendedores
-    cursor.execute("ALTER TABLE usuarios ADD COLUMN total_vendas INTEGER DEFAULT 0")
-    
-    conexao.commit()
-    conexao.close()
-
-def atualizar_total_vendas(db_path):
-    conexao = sqlite3.connect(db_path)
-    cursor = conexao.cursor()
-    
-    # Consulta para contar as vendas por vendedor
-    query = """
-    SELECT usuarios.id, SUM(vendas.valor_unitario) AS total_vendas
-    FROM usuarios
-    LEFT JOIN vendas ON usuarios.name = vendas.name
-    GROUP BY usuarios.id
-    """
-    
-    cursor.execute(query)
-    resultados = cursor.fetchall()
-    
-    # Atualizar a tabela vendedores com os resultados
-    for id_vendedor, total_vendas in resultados:
-        cursor.execute(
-            "UPDATE usuarios SET total_vendas = ? WHERE id = ?",
-            (total_vendas, id_vendedor)
-        )
-    
+    conexao.close() 
 
 def get_vendas_setor(db_path,setor):
         conexao = sqlite3.connect(db_path)
         cursor = conexao.cursor()
-        query = """SELECT usuarios.setor,SUM(vendas.valor_unitario)
-        FROM usuarios 
-        LEFT JOIN vendas ON usuarios.name = vendas.name
-        WHERE usuarios.setor = ?
-        GROUP BY usuarios.setor
+        query_vendedores = """
+        SELECT 
+        colaboradores.setor, 
+        colaboradores.name, 
+        COUNT(pedidos.id) AS quantidade_vendas, 
+        SUM(pedidos.total) AS total_vendas
+        FROM colaboradores
+        JOIN pedidos ON colaboradores.id = pedidos.colaborador_id
+        WHERE colaboradores.setor = ?
+        GROUP BY colaboradores.id
+        ORDER BY quantidade_vendas DESC;
         """
-        cursor.execute(query,(setor,))
+        cursor.execute(query_vendedores, (setor,))
         resultados = cursor.fetchall()
 
         #exibir resultados
-        for setor, total_vendas in resultados :
-            print(f"setor{setor},||Total de Vendas: {total_vendas}")
+        a = 0
+        for setor, nome, quantidade_vendas, total_vendas in resultados:
+            
+            a = a + total_vendas
+            print(f"Setor: {setor}, Nome: {nome}, Quantidade de Vendas: {quantidade_vendas}, Total de Vendas: {total_vendas}")
+        
+        print("==============================================================================================================")
+        print("Total de Vendas do Setor: ",a)
+
+        
         conexao.close()
         
 def get_mais_vendidos(db_path):
@@ -119,11 +101,11 @@ def get_mais_vendidos(db_path):
     cursor = conexao.cursor()
 
     query = """
-    SELECT produto, SUM(valor_unitario) AS total_vendas
-    FROM vendas
-    GROUP BY produto
-    ORDER BY total_vendas DESC
-    LIMIT 1
+    SELECT produtos.nome,COUNT(itens_pedido.produto_id) AS total_vendas
+    FROM itens_pedido
+    JOIN produtos ON itens_pedido.produto_id = produtos.id
+    GROUP BY itens_pedido.produto_id
+    LIMIT 5
     """
 
     cursor.execute(query)
