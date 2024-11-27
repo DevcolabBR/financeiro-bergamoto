@@ -18,7 +18,7 @@ df_vendas_produtos
 venda_categoria = df_vendas_produtos.groupby('categoria')['total_vendas'].sum().reset_index()
 venda_categoria
 #%% -- VENDAS POR CATEGORIA --
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(11, 6))
 plt.bar(venda_categoria['categoria'], venda_categoria['total_vendas'])
 plt.xlabel('Categoria')
 plt.grid(axis='y')
@@ -60,4 +60,13 @@ df_funcionarios_setor = pd.read_sql_query("""
     GROUP BY colaboradores.setor
 """,con)
 df_funcionarios_setor
+
+#%%
+plt.figure(figsize=(10, 6))
+plt.bar(df_funcionarios_setor['setor'], df_funcionarios_setor['total_funcionarios'])
+plt.xlabel('Vendedores')
+plt.grid(axis='y')
+plt.ylabel('Total em vendas')
+plt.title('Vendedores em Destaque (2024)')
+
 # %%
