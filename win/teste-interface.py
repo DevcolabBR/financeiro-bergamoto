@@ -33,18 +33,14 @@ def atualizar_colunas():
 root = tk.Tk()
 root.title("Financeiro Bergamoto")
 root.geometry("600x400")
-root.configure(bg="#FFFFFF")
+root.configure(bg="#333333")
 
 # Título principal
 titulo = tk.Label(root, text="Financeiro Bergamoto", font=("Arial", 14, "bold"), bg="#333333", fg="#66CCCC", anchor="w")
-titulo.pack(fill="x", pady=0)
-
-# Nome do usuário
-usuario_label = tk.Label(root, text="  Marcos", font=("Arial", 10), bg="#333333", fg="#FFFFFF", anchor="e")
-usuario_label.pack(fill="x", pady=0)
+titulo.pack(fill="x", pady=10)
 
 # Frame principal
-main_frame = tk.Frame(root, bg="white")
+main_frame = tk.Frame(root, bg="#333333")
 main_frame.pack(fill="both", expand=True, padx=10, pady=10)
 
 # Seção de filtros

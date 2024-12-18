@@ -1,5 +1,4 @@
 import sqlite3
-from consultas import get_vendedores
 
 db_path = "bergamoto.db" # Caminho do banco de dados
 
@@ -12,6 +11,14 @@ def get_vendedores(db_path):
         print(vendedor)
     conexao.close()
 
+def buscar_vendedores(db_path):
+    conexao = sqlite3.connect(db_path)
+    cursor = conexao.cursor()
+    cursor.execute("SELECT name, setor, metas, ponto_acumulado, numero_vendas FROM vendedores")  # Altere a tabela e colunas conforme necessário
+    dados = cursor.fetchall()
+    conexao.close()
+    return dados
+    
 def set_metas(db_path,nova_meta,setor):
     conexao = sqlite3.connect(db_path)
     cursor = conexao.cursor()
