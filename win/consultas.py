@@ -1,4 +1,5 @@
 import sqlite3
+from consultas import get_vendedores
 
 db_path = "bergamoto.db" # Caminho do banco de dados
 

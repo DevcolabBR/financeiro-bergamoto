@@ -1,4 +1,4 @@
-#%% NAO MEXER NAS TABELAS POR GENTILEZA
+#%%
 import os
 import sqlite3
 from consultas import get_vendedores, adicionar_coluna_numero_vendas, atualizar_numero_vendas,set_metas,create_vendedores,get_vendas_setor,get_mais_vendidos,set_meta_alcancada
@@ -8,7 +8,6 @@ cursor = conexao.cursor()
 #%% 
 # 4. Consultar vendedores
 get_vendedores("bergamoto.db")
-
 #%%
 # 5. Definir metas-(funcionando para todos os setores)
 set_metas("bergamoto.db",10000,"vendas")
@@ -31,3 +30,5 @@ set_meta_alcancada("bergamoto.db","vendas") ## OK
 conexao.commit()  # Salva as alterações no banco de dados
 conexao.close()
 print("\nConexão fechada.")
+
+# %%
